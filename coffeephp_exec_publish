@@ -1,0 +1,114 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * coffeephp_exec_publish
+ *
+ * Copyright 2020 Danny Damsky
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @package coffeephp\quality-tools
+ * @author Danny Damsky <dannydamsky99@gmail.com>
+ * @since 2020-09-12
+ */
+
+declare (strict_types=1);
+
+$ds = DIRECTORY_SEPARATOR;
+$eol = PHP_EOL;
+
+$composerInstall = null;
+foreach (
+    [
+        dirname(__DIR__, 2) . "{$ds}autoload.php",
+        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php",
+        __DIR__ . "{$ds}vendor{$ds}autoload.php"
+    ]
+    as $file
+) {
+    if (file_exists($file)) {
+        $composerInstall = $file;
+        break;
+    }
+}
+
+if ($composerInstall === null) {
+    fwrite(
+        STDERR,
+        "You need to set up the project dependencies using Composer.{$eol}"
+    );
+    exit(1);
+}
+
+$basedir = dirname($composerInstall, 2);
+chdir($basedir);
+
+foreach (
+    glob(
+        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provides{$ds}{,.}*[!.]",
+        GLOB_MARK | GLOB_BRACE
+    ) as $file
+) {
+    $basename = basename($file);
+    $rootFilePath = "{$basedir}{$ds}{$basename}";
+    if (!is_file($rootFilePath)) {
+        copy(
+            $file,
+            $rootFilePath
+        );
+    }
+}
+
+try {
+    $originalComposerJson = json_decode(
+        trim(file_get_contents("{$basedir}{$ds}composer.json")),
+        true,
+        512,
+        JSON_THROW_ON_ERROR
+    );
+    $newComposerJson = $originalComposerJson;
+    $newComposerJson['scripts'] = array_merge(
+        $newComposerJson['scripts'] ?? [],
+        [
+            'coffeephp:exec:phpcbf' => 'coffeephp_exec_phpcbf',
+            'coffeephp:exec:phpcs' => 'coffeephp_exec_phpcs',
+            'coffeephp:exec:phpmd' => 'coffeephp_exec_phpmd',
+            'coffeephp:exec:phpstan-analyse' => 'coffeephp_exec_phpstan_analyse',
+            'coffeephp:exec:phpunit' => 'coffeephp_exec_phpunit',
+            'coffeephp:exec:psalm' => 'coffeephp_exec_psalm',
+            'coffeephp:exec:psalm-alter' => 'coffeephp_exec_psalm_alter',
+            'coffeephp:exec:publish' => 'coffeephp_exec_publish',
+            'coffeephp:exec:analyse' => [
+                '@coffeephp:exec:phpunit',
+                '@coffeephp:exec:psalm',
+                '@coffeephp:exec:phpcs',
+                '@coffeephp:exec:phpstan-analyse',
+                '@coffeephp:exec:phpmd'
+            ]
+        ]
+    );
+    if ($newComposerJson !== $originalComposerJson) {
+        file_put_contents(
+            "{$basedir}{$ds}composer.json",
+            json_encode($newComposerJson, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
+        );
+    }
+} catch (Throwable $e) {
+    fwrite(
+        STDERR,
+        "Failed to read from '{$basedir}{$ds}composer.json'{$eol}"
+    );
+    exit(1);
+}
+
+exit(0);

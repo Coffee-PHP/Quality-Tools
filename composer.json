@@ -1,0 +1,51 @@
+{
+    "name": "coffeephp/quality-tools",
+    "description": "Quality tools for the CoffeePHP framework.",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Danny Damsky",
+            "email": "dannydamsky99@gmail.com"
+        }
+    ],
+    "keywords": [
+        "coffee",
+        "php",
+        "coffeephp",
+        "quality",
+        "tools",
+        "dev",
+        "static",
+        "analysis",
+        "test",
+        "framework",
+        "testing"
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "fzaninotto/faker": "^1.9",
+        "mockery/mockery": "^1.4",
+        "phpmd/phpmd": "^2.9",
+        "phpstan/phpstan": "^0.12.42",
+        "phpunit/phpunit": "^9.3",
+        "squizlabs/php_codesniffer": "^3.5",
+        "vimeo/psalm": "^3.15"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
+    "bin": [
+        "coffeephp_exec_phpcbf",
+        "coffeephp_exec_phpcs",
+        "coffeephp_exec_phpmd",
+        "coffeephp_exec_phpstan_analyse",
+        "coffeephp_exec_phpunit",
+        "coffeephp_exec_psalm",
+        "coffeephp_exec_psalm_alter",
+        "coffeephp_exec_publish"
+    ],
+    "config": {
+        "sort-packages": true
+    }
+}
