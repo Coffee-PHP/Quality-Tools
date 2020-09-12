@@ -71,11 +71,7 @@ $command = [
     'php',
     $psalmInstall,
     '--alter',
-    '-c',
-    "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}psalm.xml",
-    "-r",
-    $basedir,
-    ...$arguments
+    '--issues=all'
 ];
 
 $handle = popen(implode(' ', $command), 'r');
