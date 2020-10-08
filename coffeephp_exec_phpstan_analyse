@@ -64,7 +64,7 @@ $command = [
     'analyse',
     ...$arguments,
     '-c',
-    "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}phpstan.neon.dist",
+    "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}ruleset{$ds}phpstan.neon.dist",
     '--memory-limit=' . ini_get('memory_limit'),
     "{$basedir}{$ds}src"
 ];

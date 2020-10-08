@@ -61,7 +61,7 @@ array_shift($arguments);
 $command = [
     'php',
     $phpcsInstall,
-    "--standard={$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}phpcs.xml.dist",
+    "--standard={$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}ruleset{$ds}phpcs.xml.dist",
     ...$arguments,
     "{$basedir}{$ds}src"
 ];

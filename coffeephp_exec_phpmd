@@ -63,7 +63,7 @@ $command = [
     $phpmdInstall,
     "{$basedir}{$ds}src",
     'ansi',
-    "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}phpmd.ruleset.xml"
+    "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}ruleset{$ds}phpmd.ruleset.xml"
 ];
 
 $handle = popen(implode(' ', $command), 'r');
