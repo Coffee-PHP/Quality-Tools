@@ -59,7 +59,7 @@ $phpunitXmlLocation = "{$basedir}{$ds}phpunit.xml";
 
 if (!is_file($phpunitXmlLocation)) {
     copy(
-        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provides{$ds}phpunit.xml",
+        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provide{$ds}phpunit.xml",
         $phpunitXmlLocation
     );
 }

@@ -59,7 +59,7 @@ $psalmXmlLocation = "{$basedir}{$ds}psalm.xml";
 
 if (!is_file($psalmXmlLocation)) {
     copy(
-        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provides{$ds}psalm.xml",
+        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provide{$ds}psalm.xml",
         $psalmXmlLocation
     );
 }

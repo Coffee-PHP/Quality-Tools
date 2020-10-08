@@ -55,7 +55,7 @@ chdir($basedir);
 
 foreach (
     glob(
-        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provides{$ds}{,.}*[!.]",
+        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provide{$ds}{,.}*[!.]",
         GLOB_MARK | GLOB_BRACE
     ) as $file
 ) {
