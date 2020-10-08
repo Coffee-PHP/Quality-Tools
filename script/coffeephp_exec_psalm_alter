@@ -2,7 +2,7 @@
 <?php
 
 /**
- * coffeephp_exec_phpcs
+ * coffeephp_exec_psalm_alter
  *
  * Copyright 2020 Danny Damsky
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,9 +30,9 @@ $eol = PHP_EOL;
 $composerInstall = null;
 foreach (
     [
-        dirname(__DIR__, 2) . "{$ds}autoload.php",
-        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php",
-        __DIR__ . "{$ds}vendor{$ds}autoload.php"
+        dirname(__DIR__, 3) . "{$ds}autoload.php",
+        dirname(__DIR__, 2) . "{$ds}vendor{$ds}autoload.php",
+        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php"
     ]
     as $file
 ) {
@@ -53,17 +53,25 @@ if ($composerInstall === null) {
 $basedir = dirname($composerInstall, 2);
 chdir($basedir);
 
-$phpcsInstall = "{$basedir}{$ds}vendor{$ds}squizlabs{$ds}php_codesniffer{$ds}bin{$ds}phpcs";
+$psalmInstall = "{$basedir}{$ds}vendor{$ds}vimeo{$ds}psalm{$ds}psalm";
+
+$psalmXmlLocation = "{$basedir}{$ds}psalm.xml";
+
+if (!is_file($psalmXmlLocation)) {
+    copy(
+        "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}provide{$ds}psalm.xml",
+        $psalmXmlLocation
+    );
+}
 
 $arguments = $argv;
 array_shift($arguments);
 
 $command = [
     'php',
-    $phpcsInstall,
-    "--standard={$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}ruleset{$ds}phpcs.xml.dist",
-    ...$arguments,
-    "{$basedir}{$ds}src"
+    $psalmInstall,
+    '--alter',
+    '--issues=all'
 ];
 
 $handle = popen(implode(' ', $command), 'r');
@@ -71,7 +79,7 @@ $handle = popen(implode(' ', $command), 'r');
 if (!$handle) {
     fwrite(
         STDERR,
-        "Failed to execute PHPCS file: $phpcsInstall{$eol}"
+        "Failed to execute psalm file: $psalmInstall{$eol}"
     );
     exit(1);
 }

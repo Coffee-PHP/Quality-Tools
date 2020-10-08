@@ -2,7 +2,7 @@
 <?php
 
 /**
- * coffeephp_exec_phpcbf
+ * coffeephp_exec_phpmd
  *
  * Copyright 2020 Danny Damsky
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,9 +30,9 @@ $eol = PHP_EOL;
 $composerInstall = null;
 foreach (
     [
-        dirname(__DIR__, 2) . "{$ds}autoload.php",
-        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php",
-        __DIR__ . "{$ds}vendor{$ds}autoload.php"
+        dirname(__DIR__, 3) . "{$ds}autoload.php",
+        dirname(__DIR__, 2) . "{$ds}vendor{$ds}autoload.php",
+        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php"
     ]
     as $file
 ) {
@@ -53,17 +53,17 @@ if ($composerInstall === null) {
 $basedir = dirname($composerInstall, 2);
 chdir($basedir);
 
-$phpcbfInstall = "{$basedir}{$ds}vendor{$ds}squizlabs{$ds}php_codesniffer{$ds}bin{$ds}phpcbf";
+$phpmdInstall = "{$basedir}{$ds}vendor{$ds}phpmd{$ds}phpmd{$ds}src{$ds}bin{$ds}phpmd";
 
 $arguments = $argv;
 array_shift($arguments);
 
 $command = [
     'php',
-    $phpcbfInstall,
-    "--standard={$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}ruleset{$ds}phpcs.xml.dist",
-    ...$arguments,
-    "{$basedir}{$ds}src"
+    $phpmdInstall,
+    "{$basedir}{$ds}src",
+    'ansi',
+    "{$basedir}{$ds}vendor{$ds}coffeephp{$ds}quality-tools{$ds}ruleset{$ds}phpmd.ruleset.xml"
 ];
 
 $handle = popen(implode(' ', $command), 'r');
@@ -71,7 +71,7 @@ $handle = popen(implode(' ', $command), 'r');
 if (!$handle) {
     fwrite(
         STDERR,
-        "Failed to execute PHPCBF file: $phpcbfInstall{$eol}"
+        "Failed to execute PHPMD file: $phpmdInstall{$eol}"
     );
     exit(1);
 }
