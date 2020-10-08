@@ -30,9 +30,9 @@ $eol = PHP_EOL;
 $composerInstall = null;
 foreach (
     [
-        dirname(__DIR__, 2) . "{$ds}autoload.php",
-        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php",
-        __DIR__ . "{$ds}vendor{$ds}autoload.php"
+        dirname(__DIR__, 3) . "{$ds}autoload.php",
+        dirname(__DIR__, 2) . "{$ds}vendor{$ds}autoload.php",
+        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php"
     ]
     as $file
 ) {
