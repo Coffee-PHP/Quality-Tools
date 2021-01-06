@@ -28,7 +28,12 @@ namespace CoffeePhp\QualityTools;
 use Faker\Factory;
 use Faker\Generator;
 use Mockery;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
+use Throwable;
+
+use function PHPUnit\Framework\assertInstanceOf;
+use function PHPUnit\Framework\assertSame;
 
 /**
  * Class TestCase
@@ -91,5 +96,35 @@ abstract class TestCase extends PhpUnitTestCase
     protected function setUpBeforeAllTests(): void
     {
         Mockery::globalHelpers();
+    }
+
+    /**
+     * Check that the given callback throws the given exception type.
+     *
+     * @param callable $run
+     * @param string $exceptionClassName
+     * @param string|null $expectedMessage
+     * @param mixed $expectedCode
+     */
+    public function assertException(
+        callable $run,
+        string $exceptionClassName = Throwable::class,
+        ?string $expectedMessage = null,
+        mixed $expectedCode = null
+    ): void {
+        try {
+            $run();
+            self::fail('Failed asserting that an exception was thrown.');
+        } catch (AssertionFailedError $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            assertInstanceOf($exceptionClassName, $e);
+            if ($expectedMessage !== null) {
+                assertSame($expectedMessage, $e->getMessage());
+            }
+            if ($expectedCode !== null) {
+                assertSame($expectedCode, $e->getCode());
+            }
+        }
     }
 }
