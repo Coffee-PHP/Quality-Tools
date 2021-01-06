@@ -68,7 +68,7 @@ $arguments = $argv;
 array_shift($arguments);
 
 $command = [
-    'php',
+    PHP_BINARY,
     $psalmInstall,
     '--alter',
     '--issues=all'
