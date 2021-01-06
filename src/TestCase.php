@@ -38,18 +38,58 @@ use PHPUnit\Framework\TestCase as PhpUnitTestCase;
  */
 abstract class TestCase extends PhpUnitTestCase
 {
-    protected Generator $faker;
+    /**
+     * @var bool
+     */
+    private static bool $isFirstSetup = true;
+
+    /**
+     * @var array<string, Generator>
+     */
+    private array $fakers = [];
 
     /**
      * TestCase constructor.
      * @param string|null $name
      * @param array $data
-     * @param string $dataName
+     * @param int|string $dataName
      */
-    public function __construct(?string $name = null, array $data = [], string $dataName = '')
+    public function __construct(?string $name = null, array $data = [], int|string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+    }
+
+    /**
+     * Runs before all tests, allows inheriting methods to perform some initial bootstrap.
+     */
+    final public function runBeforeAllTests(): void
+    {
+        if (self::$isFirstSetup) {
+            $this->setUpBeforeAllTests();
+            self::$isFirstSetup = false;
+        }
+    }
+
+
+    /**
+     * Get an instance of a faker object.
+     *
+     * @param string $locale
+     * @return Generator
+     */
+    final public function getFaker(string $locale = Factory::DEFAULT_LOCALE): Generator
+    {
+        if (!isset($this->fakers[$locale])) {
+            $this->fakers[$locale] = Factory::create($locale);
+        }
+        return $this->fakers[$locale];
+    }
+
+    /**
+     * Perform initial bootstrap before any tests are executed.
+     */
+    protected function setUpBeforeAllTests(): void
+    {
         Mockery::globalHelpers();
-        $this->faker = Factory::create();
     }
 }
