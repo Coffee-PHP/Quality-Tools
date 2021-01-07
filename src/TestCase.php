@@ -32,9 +32,6 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
 use Throwable;
 
-use function PHPUnit\Framework\assertInstanceOf;
-use function PHPUnit\Framework\assertSame;
-
 /**
  * Class TestCase
  * @package coffeephp\quality-tools
@@ -49,23 +46,44 @@ abstract class TestCase extends PhpUnitTestCase
     private static bool $isFirstSetup = true;
 
     /**
+     * Check that the given callback throws the given exception type.
+     *
+     * @param callable $run
+     * @param string $exceptionClassName
+     * @param string|null $expectedMessage
+     * @param mixed $expectedCode
+     */
+    public static function assertException(
+        callable $run,
+        string $exceptionClassName = Throwable::class,
+        ?string $expectedMessage = null,
+        mixed $expectedCode = null
+    ): void {
+        try {
+            $run();
+            self::fail('Failed asserting that an exception was thrown.');
+        } catch (AssertionFailedError $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            self::assertInstanceOf($exceptionClassName, $e);
+            if ($expectedMessage !== null) {
+                self::assertSame($expectedMessage, $e->getMessage());
+            }
+            if ($expectedCode !== null) {
+                self::assertSame($expectedCode, $e->getCode());
+            }
+        }
+    }
+
+    /**
      * @var array<string, Generator>
      */
     private array $fakers = [];
 
     /**
-     * TestCase constructor.
-     * @param string|null $name
-     * @param array $data
-     * @param int|string $dataName
-     */
-    public function __construct(?string $name = null, array $data = [], int|string $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
-
-    /**
      * Runs before all tests, allows inheriting methods to perform some initial bootstrap.
+     *
+     * @before
      */
     final public function runBeforeAllTests(): void
     {
@@ -74,7 +92,6 @@ abstract class TestCase extends PhpUnitTestCase
             self::$isFirstSetup = false;
         }
     }
-
 
     /**
      * Get an instance of a faker object.
@@ -96,35 +113,5 @@ abstract class TestCase extends PhpUnitTestCase
     protected function setUpBeforeAllTests(): void
     {
         Mockery::globalHelpers();
-    }
-
-    /**
-     * Check that the given callback throws the given exception type.
-     *
-     * @param callable $run
-     * @param string $exceptionClassName
-     * @param string|null $expectedMessage
-     * @param mixed $expectedCode
-     */
-    public function assertException(
-        callable $run,
-        string $exceptionClassName = Throwable::class,
-        ?string $expectedMessage = null,
-        mixed $expectedCode = null
-    ): void {
-        try {
-            $run();
-            self::fail('Failed asserting that an exception was thrown.');
-        } catch (AssertionFailedError $e) {
-            throw $e;
-        } catch (Throwable $e) {
-            assertInstanceOf($exceptionClassName, $e);
-            if ($expectedMessage !== null) {
-                assertSame($expectedMessage, $e->getMessage());
-            }
-            if ($expectedCode !== null) {
-                assertSame($expectedCode, $e->getCode());
-            }
-        }
     }
 }
