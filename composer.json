@@ -51,6 +51,12 @@
         "script/coffeephp_exec_publish"
     ],
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "apcu-autoloader": true,
+        "platform": {
+            "php": "8.0"
+        },
+        "platform-check": false
     }
 }
