@@ -2,10 +2,14 @@
     "name": "coffeephp/quality-tools",
     "description": "Quality tools for the CoffeePHP framework.",
     "license": "Apache-2.0",
+    "version": "1.1.6",
+    "type": "library",
+    "readme": "README.md",
+    "time": "2021-01-08",
     "authors": [
         {
             "name": "Danny Damsky",
-            "email": "dannydamsky99@gmail.com"
+            "email": "dannydamsky99@gmail.com",
         }
     ],
     "keywords": [
