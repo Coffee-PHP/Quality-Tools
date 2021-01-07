@@ -32,7 +32,7 @@ foreach (
     [
         dirname(__DIR__, 3) . "{$ds}autoload.php",
         dirname(__DIR__, 2) . "{$ds}vendor{$ds}autoload.php",
-        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php"
+        dirname(__DIR__) . "{$ds}vendor{$ds}autoload.php",
     ]
     as $file
 ) {
@@ -88,13 +88,6 @@ try {
             'coffeephp:exec:psalm' => 'coffeephp_exec_psalm',
             'coffeephp:exec:psalm-alter' => 'coffeephp_exec_psalm_alter',
             'coffeephp:exec:publish' => 'coffeephp_exec_publish',
-            'coffeephp:exec:analyse' => [
-                '@coffeephp:exec:phpunit',
-                '@coffeephp:exec:psalm',
-                '@coffeephp:exec:phpcs',
-                '@coffeephp:exec:phpstan-analyse',
-                '@coffeephp:exec:phpmd'
-            ]
         ]
     );
     if ($newComposerJson !== $originalComposerJson) {
