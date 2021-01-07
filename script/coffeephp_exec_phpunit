@@ -72,6 +72,7 @@ $command = [
     $phpunitInstall,
     '--configuration',
     $phpunitXmlLocation,
+    '--colors=always',
     ...$arguments
 ];
 
