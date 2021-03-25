@@ -22,7 +22,7 @@
  * @since 2020-09-12
  */
 
-declare (strict_types=1);
+declare(strict_types=1);
 
 $ds = DIRECTORY_SEPARATOR;
 $eol = PHP_EOL;
